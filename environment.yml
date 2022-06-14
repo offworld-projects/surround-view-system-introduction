@@ -1,0 +1,11 @@
+name: surround-view-system-intro
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - matplotlib
+  - numpy
+  - opencv
+  - scipy
+  - shapely
+  - tqdm

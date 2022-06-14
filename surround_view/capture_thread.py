@@ -4,7 +4,7 @@ from PyQt5.QtCore import qDebug
 from .base_thread import BaseThread
 from .structures import ImageFrame
 from .utils import gstreamer_pipeline
-
+from .stream_single_image import StreamSingleImage
 
 class CaptureThread(BaseThread):
 
@@ -15,7 +15,8 @@ class CaptureThread(BaseThread):
                  api_preference=cv2.CAP_GSTREAMER,
                  resolution=None,
                  use_gst=True,
-                 parent=None):
+                 parent=None,
+                 img_file=None):
         """
         device_id: device number of the camera.
         flip_method: 0 for identity, 2 for 180 degree rotation (if the camera is installed
@@ -31,7 +32,11 @@ class CaptureThread(BaseThread):
         self.drop_if_full = drop_if_full
         self.api_preference = api_preference
         self.resolution = resolution
-        self.cap = cv2.VideoCapture()
+        if img_file is None:
+            self.cap = cv2.VideoCapture()
+        else:
+            self.cap = StreamSingleImage(img_file, 30.)
+        self.img_file = img_file
         # an instance of the MultiBufferManager object,
         # for synchronizing this thread with other cameras.
         self.buffer_manager = None
@@ -73,7 +78,9 @@ class CaptureThread(BaseThread):
         qDebug("Stopping capture thread...")
 
     def connect_camera(self):
-        if self.use_gst:
+        if self.img_file is not None:
+            pass  # nothing to do here when streaming from single file
+        elif self.use_gst:
             options = gstreamer_pipeline(cam_id=self.device_id, flip_method=self.flip_method)
             self.cap.open(options, self.api_preference)
         else:
@@ -94,8 +101,11 @@ class CaptureThread(BaseThread):
                     return False
             # use the default resolution
             else:
-                width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-                height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                if self.img_file is None:
+                    width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                    height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                else:
+                    height, width = self.cap.get()
                 self.resolution = (width, height)
 
         return True
