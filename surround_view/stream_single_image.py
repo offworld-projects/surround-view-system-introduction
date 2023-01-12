@@ -11,13 +11,10 @@ class StreamSingleImage(object):
     def isOpened(self):
         return self.image is not None
     
-    def read(self, image=None):
-        if self.image is None:
-            return False, None
-        if not image:
-            return True, self.image.copy()
-        np.copyto(image, self.image)
-        return True, image
+    def read(self):
+        while not self.grab():
+            time.sleep(0.001)
+        return self.retrieve()
 
     def grab(self):
         current_time = time.time()
@@ -27,7 +24,7 @@ class StreamSingleImage(object):
         return False
     
     def retrieve(self):
-        return True, self.image
+        return True, self.image.copy()
     
     def release(self):
         self.image = None

@@ -22,8 +22,10 @@ total_h = 1000 + 2 * shift_h
 # four corners of the rectangular region occupied by the car
 # top-left (x_left, y_top), bottom-right (x_right, y_bottom)
 xl = shift_w + 180 + inn_shift_w
+#xl = shift_w + 100 + inn_shift_w
 xr = total_w - xl
 yt = shift_h + 200 + inn_shift_h
+#yt = shift_h + 150 + inn_shift_h
 yb = total_h - yt
 # --------------------------------------------------------------------
 

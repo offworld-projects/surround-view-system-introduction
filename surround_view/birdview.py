@@ -133,7 +133,8 @@ class BirdView(BaseThread):
         self.image = np.zeros((settings.total_h, settings.total_w, 3), np.uint8)
         self.weights = None
         self.masks = None
-        self.car_image = settings.car_image
+        #self.car_image = settings.car_image
+        self.car_image = np.zeros((yb-yt, xr-xl, 3), np.uint8)
         self.frames = None
 
     def get(self):

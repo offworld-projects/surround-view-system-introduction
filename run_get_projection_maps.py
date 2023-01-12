@@ -58,11 +58,11 @@ def main():
     image_file = os.path.join(os.getcwd(), "images", camera_name + ".png")
     image = cv2.imread(image_file)
     camera = FisheyeCameraModel(camera_file, camera_name)
-    camera.set_scale_and_shift(scale, shift)
+    #camera.set_scale_and_shift(scale, shift)
     success = get_projection_map(camera, image)
     if success:
         print("saving projection matrix to yaml")
-        camera.save_data()
+        #camera.save_data()
     else:
         print("failed to compute the projection map")
 
